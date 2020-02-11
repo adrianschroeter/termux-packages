@@ -27,3 +27,7 @@ termux_step_pre_configure() {
         CFLAGS+=" -ffunction-sections -Wno-implicit-function-declaration"
 }
 
+termux_step_post_massage() {
+        sed -i -e '/_db_backend/s/bdb/ndb/' $TERMUX_PKG_MASSAGEDIR/$TERMUX_PREFIX/lib/rpm/macros
+}
+
