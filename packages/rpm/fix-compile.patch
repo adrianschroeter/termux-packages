@@ -1,0 +1,35 @@
+--- rpm-4.15.1.orig/misc/fts.c	2019-06-26 16:17:31.420985682 +0200
++++ rpm-4.15.1/misc/fts.c	2020-02-10 15:04:50.032959513 +0100
+@@ -61,6 +61,9 @@
+ #   define __errno_location()	(&errno)
+ #   define dirfd(dirp)		-1
+ #endif
++#if defined(__ANDROID__)
++#   define __errno_location()   (&errno)
++#endif
+ #if defined(__APPLE__)
+ #   define __errno_location()	(__error())
+ #endif
+--- rpm-4.15.1.orig/rpmio/Makefile.am	2019-11-13 10:19:29.417711221 +0100
++++ rpm-4.15.1/rpmio/Makefile.am	2020-02-10 15:12:45.253829715 +0100
+@@ -50,8 +50,7 @@
+ 	@WITH_ZLIB_LIB@ \
+ 	@WITH_POPT_LIB@ \
+ 	@WITH_LZMA_LIB@ \
+-	$(ZSTD_LIBS) \
+-	-lpthread
++	$(ZSTD_LIBS)
+ 
+ if WITH_INTERNAL_BEECRYPT
+ librpmio_la_LIBADD += $(libbeecrypt_la)
+--- rpm-4.15.1.orig/rpmio/Makefile.in	2019-11-13 10:29:17.913314087 +0100
++++ rpm-4.15.1/rpmio/Makefile.in	2020-02-10 15:12:55.710114039 +0100
+@@ -536,7 +536,7 @@
+ librpmio_la_LIBADD = ../misc/libmisc.la @WITH_NSS_LIB@ \
+ 	@WITH_BEECRYPT_LIB@ @WITH_OPENSSL_LIB@ @WITH_LIBGCRYPT_LIB@ \
+ 	@WITH_BZ2_LIB@ @WITH_ZLIB_LIB@ @WITH_POPT_LIB@ @WITH_LZMA_LIB@ \
+-	$(ZSTD_LIBS) -lpthread $(am__append_5) $(am__append_8)
++	$(ZSTD_LIBS) $(am__append_5) $(am__append_8)
+ @WITH_INTERNAL_BEECRYPT_TRUE@libbeecrypt_la = $(top_builddir)/beecrypt/libbeecrypt_nolibdir.la
+ all: all-am
+ 
